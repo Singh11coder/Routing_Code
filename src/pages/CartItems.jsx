@@ -4,7 +4,17 @@ import { Product } from "../context/ProductContext";
 
 const CartItems = () => {
   const {cartItems , setCartItems} = useContext(Product);
+  let totalPrice = cartItems.reduce((acc,curr) => {
+      acc = acc + ((curr.quantity)*(curr.price));
+
+      return acc;
+  },0)
+
+  let dis = totalPrice * (10/100);
+  let discount = dis.toFixed(2);
   
+   
+
   const handleIncrement = (id) => {
      let arr = cartItems.map((val) => {
         return val.id === id
@@ -13,11 +23,28 @@ const CartItems = () => {
      })
      setCartItems(arr);
   }
-
+  
   const handleDecrement = (id) => {
+     let obj = cartItems.find((val) => val.id === id);
+     let arr;
+     if(obj.quantity === 1){
+       arr = cartItems.filter((val) => val.id !== id);
+     }
+     else{
+       arr = cartItems.map((val) => {
+          return val.id === id
+          ? {...val,quantity:val.quantity-1}
+          : val
+       })
+     }
 
+     setCartItems(arr);
   }
-
+  
+  const removeFromCarts = (id) => {
+     let arr = cartItems.filter((val) => val.id !== id);
+     setCartItems(arr);
+  }
   return (
     <div className="min-h-screen bg-gray-50 p-6 md:p-8">
       <div className="mx-auto max-w-7xl">
@@ -107,6 +134,7 @@ const CartItems = () => {
 
                         {/* Remove Button - UI only */}
                         <button
+                          onClick={() => removeFromCarts(item.id)}
                           type="button"
                           aria-label={`Remove ${item.title}`}
                           className="shrink-0 rounded-lg p-2 text-gray-400 transition hover:bg-red-50 hover:text-red-500"
@@ -188,12 +216,12 @@ const CartItems = () => {
               <div className="mt-6 space-y-4">
                 <div className="flex justify-between text-sm text-gray-600">
                   <span>Subtotal</span>
-                  <span className="font-medium text-gray-900">$0.00</span>
+                  <span className="font-medium text-gray-900">${totalPrice}</span>
                 </div>
 
                 <div className="flex justify-between text-sm text-gray-600">
                   <span>Discount</span>
-                  <span className="font-medium text-green-600">−$0.00</span>
+                  <span className="font-medium text-green-600">−${discount}</span>
                 </div>
 
                 <div className="flex justify-between text-sm text-gray-600">
@@ -206,8 +234,8 @@ const CartItems = () => {
                     <span className="font-bold text-gray-900">
                       Total
                     </span>
-                    <span className="text-2xl font-bold text-blue-600">
-                      $0.00
+                    <span className="text-2xl font-bold text-green-600">
+                      ${(totalPrice-discount).toFixed(2)}
                     </span>
                   </div>
                   <p className="mt-1 text-xs text-gray-400">
