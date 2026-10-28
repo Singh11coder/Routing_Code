@@ -43,6 +43,7 @@ const Login = () => {
      console.log(ans);
      setLoggedInUser(ans);
      localStorage.setItem("loggedIn",JSON.stringify(ans));
+     navigate("/main");
      reset();
   }
 

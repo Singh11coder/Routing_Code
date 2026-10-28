@@ -1,9 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router";
 
+
 const Navbar = () => {
   const navigate = useNavigate();
-
+  const handleLogout = () => {
+    localStorage.removeItem("loggedIn");
+    navigate("/");  
+  }
   return (
     <aside className="w-64 shrink-0 h-screen border-r-2 flex flex-col justify-between px-6">
       {/* Logo */}
@@ -25,7 +29,7 @@ const Navbar = () => {
         </h1>
 
         <h1
-          onClick={() => navigate("/main/products")}
+          onClick={() => navigate("/main/products/all")}
           className="mb-6 cursor-pointer"
         >
           Products
@@ -41,7 +45,9 @@ const Navbar = () => {
 
       {/* Logout */}
       <div className="pb-6">
-        <button className="bg-gray-600 hover:bg-gray-400 px-4 py-2 rounded-2xl cursor-pointer">
+        <button 
+        onClick={handleLogout}
+        className="bg-gray-600 hover:bg-gray-400 px-4 py-2 rounded-2xl cursor-pointer">
           Logout
         </button>
       </div>

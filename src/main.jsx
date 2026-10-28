@@ -15,6 +15,11 @@ import ProductLayout from './layout/ProductLayout.jsx';
 import { ProductProvider } from './context/ProductContext.jsx';
 import Search from './pages/Search.jsx';
 import CartItems from './pages/CartItems.jsx';
+import Order from './pages/Order.jsx';
+import AllUsers from './pages/UserPages/AllUsers.jsx';
+import CreateUser from './pages/UserPages/CreateUser.jsx';
+import RemoveUser from './pages/UserPages/RemoveUser.jsx';
+
 
 const router = createBrowserRouter([
     {
@@ -58,13 +63,31 @@ const router = createBrowserRouter([
                       {
                         path:"carts",
                         element:<CartItems/>
+                      },
+                      {
+                        path:"orders",
+                        element:<Order/>
                       }
                    ]  
                    
                 },
                 {
                    path:"users",
-                   element:<Users/>
+                   element:<Users/>,
+                   children:[
+                     {
+                        path:"all",
+                        element:<AllUsers/>
+                     },
+                     {
+                        path:"create",
+                        element:<CreateUser/>
+                     },
+                     {
+                        path:"remove",
+                        element:<RemoveUser/>
+                     }
+                   ]
                 }
               ]
            }

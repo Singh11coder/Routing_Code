@@ -1,8 +1,12 @@
 
 import React, { useContext } from "react";
 import { Product } from "../context/ProductContext";
+import { useNavigate } from "react-router";
 
 const CartItems = () => {
+
+  let navigate = useNavigate();
+
   const {cartItems , setCartItems} = useContext(Product);
   let totalPrice = cartItems.reduce((acc,curr) => {
       acc = acc + ((curr.quantity)*(curr.price));
@@ -46,7 +50,7 @@ const CartItems = () => {
      setCartItems(arr);
   }
   return (
-    <div className="min-h-screen bg-gray-50 p-6 md:p-8">
+    <div className="h-screen  bg-gray-50 p-6 md:p-8 overflow-y-scroll">
       <div className="mx-auto max-w-7xl">
 
         {/* Page Header */}
@@ -245,8 +249,9 @@ const CartItems = () => {
               </div>
 
               <button
+                onClick={() => navigate("/main/products/orders")}
                 type="button"
-                className="mt-7 w-full rounded-xl bg-blue-600 px-5 py-3.5 font-semibold text-white shadow-md transition hover:bg-blue-700 hover:shadow-lg"
+                className="cursor-pointer mt-7 w-full rounded-xl bg-blue-600 px-5 py-3.5 font-semibold text-white shadow-md transition hover:bg-blue-700 hover:shadow-lg"
               >
                 Proceed to Checkout →
               </button>
