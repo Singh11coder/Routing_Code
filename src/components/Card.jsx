@@ -1,8 +1,10 @@
 
-import React from "react";
+import React, { useContext } from "react";
+import {Product} from '../context/ProductContext'
 
 const Card = ({ val }) => {
   const {
+    id,
     title,
     description,
     category,
@@ -14,10 +16,55 @@ const Card = ({ val }) => {
     thumbnail,
     images,
   } = val;
-
+  const {
+    products,
+    cartItems, 
+    setCartItems, 
+    } = useContext(Product);
   const discountedPrice = (
     price * (1 - discountPercentage / 100)
   ).toFixed(2);
+  
+
+  const addCartItem = () => {
+     let item = products.find((val) => val.id === id);
+     let newobj;
+     if(item.quantity){
+       newobj = {...item,quantity:item.quantity + 1}
+     }
+     else{
+       newobj = {...item,quantity:1}
+     }
+
+     setCartItems([...cartItems,newobj]);
+     
+  }
+
+  const handleIncrement = () => {
+    let arr = cartItems.map((val) => {
+       return  val.id === id 
+        ? {...val,quantity:val.quantity + 1}
+        : val;
+    });
+    console.log(arr);
+    setCartItems(arr);
+  }
+
+  const handleDecrement = () => {
+    let arr = cartItems.find((val) => val.id === id);
+    let arr2;
+    if(arr.quantity == 1){
+       arr2 = cartItems.filter((val) => val.id !== id);
+    }
+    else{
+       arr2 = cartItems.map((val) => {
+          return val.id === id
+          ? {...val,quantity:val.quantity-1}
+          : val
+      })
+    }
+    setCartItems(arr2);
+  }
 
   return (
     <div className="w-full max-w-sm overflow-hidden rounded-xl border border-gray-200 bg-white shadow-md transition hover:shadow-xl">
@@ -74,13 +121,25 @@ const Card = ({ val }) => {
           {stock > 0 ? `${stock} items in stock` : "Out of stock"}
         </p>
 
-        {/* Button */}
-        <button
-          disabled={stock <= 0}
-          className="mt-4 w-full rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
-        >
-          Add to Cart
-        </button>
+        { !cartItems.find((val) => val.id === id)
+          ?
+           <button
+            disabled={stock <= 0}
+            onClick={addCartItem}
+            className="mt-4 w-full rounded-lg bg-blue-600 px-4 py-2 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+           >
+            Add to Cart
+           </button>
+         : 
+           <div
+            className="flex justify-between text-xl  mt-4 w-full rounded-lg bg-blue-600 px-8 py-2 font-semibold text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:bg-gray-400"
+           >
+            <button onClick={handleDecrement}>-</button>
+            <p className="font-bold">{cartItems.find((val) => val.id === id).quantity}</p>
+            <button onClick={handleIncrement}>+</button>            
+           </div>
+         }
+          
       </div>
     </div>
   );

@@ -19,7 +19,7 @@ const Products = () => {
        <ProductHeading/>
        <div className="h-screen flex flex-wrap gap-1 overflow-y-scroll">
          {products.map((val) => {
-            return <div >
+            return <div key={val.id}>
                <Card val={val}/> 
             </div> 
          })}

@@ -8,10 +8,12 @@ export const ProductProvider = ({children}) => {
   const [products,setProducts] = useState([]);
   const [loading,setLoading] = useState (true);
   const [error,setError] = useState("");
+  const [cartItems, setCartItems] = useState([]);
+  const [quantity, setQuantity] = useState(null);
 
-
+   
    const fetchProducts = async() => {
-        
+       
       const res = await axios.get("https://dummyjson.com/products");
    
       setProducts(res.data.products);
@@ -24,9 +26,14 @@ export const ProductProvider = ({children}) => {
   return <Product.Provider value={{
       products,
       setProducts,
-      loading,setLoading,
+      loading,
+      setLoading,
       error,
-      setError
+      setError,
+      quantity,
+      setQuantity,
+      cartItems,
+      setCartItems
   }}>
     {children}
   </Product.Provider>

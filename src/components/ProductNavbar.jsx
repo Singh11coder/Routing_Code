@@ -11,7 +11,9 @@ const ProductNavbar = () => {
          <h1 
          onClick={() => navigate("/main/products/search")}
          className="m-4 cursor-pointer">Products</h1>
-         <h1 className="m-4 cursor-pointer">Cart</h1>
+         <h1 
+         onClick={() => navigate("/main/products/carts")}
+         className="m-4 cursor-pointer">Cart</h1>
          <h1 className="m-4 cursor-pointer">Orders</h1>
        </aside>
     </div>

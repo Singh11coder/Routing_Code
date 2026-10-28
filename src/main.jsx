@@ -14,6 +14,7 @@ import Users from './pages/Users.jsx';
 import ProductLayout from './layout/ProductLayout.jsx';
 import { ProductProvider } from './context/ProductContext.jsx';
 import Search from './pages/Search.jsx';
+import CartItems from './pages/CartItems.jsx';
 
 const router = createBrowserRouter([
     {
@@ -53,8 +54,12 @@ const router = createBrowserRouter([
                       {
                         path:"search",
                         element:<Search/>
+                      },
+                      {
+                        path:"carts",
+                        element:<CartItems/>
                       }
-                   ]
+                   ]  
                    
                 },
                 {
