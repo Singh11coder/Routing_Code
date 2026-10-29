@@ -1,38 +1,78 @@
+import React, { useContext, useState } from "react";
+import {User} from '../../context/UserContext'; 
+import { useNavigate } from "react-router";
 
-import React from "react";
 
-const users = [
-  {
-    id: 1,
-    firstName: "Emily",
-    lastName: "Johnson",
-    email: "emily.johnson@x.dummyjson.com",
-    phone: "+81 965-431-3024",
-    age: 29,
-    gender: "female",
-    username: "emilys",
-    image: "https://dummyjson.com/icon/emilys/128",
-    company: { name: "Dooley, Kozey and Cronin", title: "Sales Manager" },
-    role: "admin",
-  },
-  {
-    id: 2,
-    firstName: "Michael",
-    lastName: "Williams",
-    email: "michael.williams@example.com",
-    phone: "+1 555-123-4567",
-    age: 32,
-    gender: "male",
-    username: "michaelw",
-    image: "https://dummyjson.com/icon/michaelw/128",
-    company: { name: "Tech Solutions", title: "Developer" },
-    role: "user",
-  },
-];
+// const users = [
+//   {
+//     id: 1,
+//     firstName: "Emily",
+//     lastName: "Johnson",
+//     email: "emily.johnson@x.dummyjson.com",
+//     phone: "+81 965-431-3024",
+//     age: 29,
+//     gender: "female",
+//     username: "emilys",
+//     image: "https://dummyjson.com/icon/emilys/128",
+//     company: { name: "Dooley, Kozey and Cronin", title: "Sales Manager" },
+//     role: "admin",
+//   },
+//   {
+//     id: 2,
+//     firstName: "Michael",
+//     lastName: "Williams",
+//     email: "michael.williams@example.com",
+//     phone: "+1 555-123-4567",
+//     age: 32,
+//     gender: "male",
+//     username: "michaelw",
+//     image: "https://dummyjson.com/icon/michaelw/128",
+//     company: { name: "Tech Solutions", title: "Developer" },
+//     role: "user",
+//   },
+// ];
 
 const AllUsers = () => {
+  const {users,setUsers} = useContext(User);
+  const [value,setValue] = useState("");
+  
+  const filterUsers = users.filter((user) => {
+     
+    const searchValue = value.trim().toLowerCase();
+    
+    return (
+      user.firstName?.toLowerCase().includes(searchValue) ||
+      user.lastName?.toLowerCase().includes(searchValue) ||
+      user.email?.toLowerCase().includes(searchValue) ||
+      user.phone?.toLowerCase().includes(searchValue) ||
+      user.username?.toLowerCase().includes(searchValue) ||
+      user.company.name?.toLowerCase().includes(searchValue) ||
+      user.company.department?.toLowerCase().includes(searchValue) ||
+      user.role.toLowerCase().includes(searchValue)  
+    );
+
+  })
+
+  let countAdmin = users.reduce((acc,curr) => {
+        if(curr.role === "admin"){
+           acc +=1;
+        }
+        return acc;
+  },0);
+
+  let regularUsers = users.reduce((acc,curr) => {
+       if(curr.role === "user"){
+        acc+=1;
+       }
+
+       return acc;
+  },0)
+
+  let navigate = useNavigate();
+
+  console.log("All users",users);
   return (
-    <div className="min-h-screen bg-gray-50 p-5 md:p-8">
+    <div className="h-screen bg-gray-50 p-5 md:p-8 overflow-y-scroll">
       <div className="mx-auto max-w-7xl">
 
         {/* Header */}
@@ -46,7 +86,9 @@ const AllUsers = () => {
             </p>
           </div>
 
-          <button className="rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700">
+          <button 
+          onClick={() => navigate("/main/users/create")}
+          className="cursor-pointer rounded-lg bg-blue-600 px-5 py-3 font-semibold text-white shadow-sm transition hover:bg-blue-700">
             + Create User
           </button>
         </div>
@@ -55,19 +97,19 @@ const AllUsers = () => {
         <div className="mb-6 grid grid-cols-1 gap-4 sm:grid-cols-3">
           <div className="rounded-xl border border-gray-200 bg-white p-5">
             <p className="text-sm text-gray-500">Total Users</p>
-            <h2 className="mt-2 text-3xl font-bold text-gray-900">2</h2>
+            <h2 className="mt-2 text-3xl font-bold text-gray-900">{users.length}</h2>
             <p className="mt-1 text-xs text-green-600">Registered accounts</p>
           </div>
 
           <div className="rounded-xl border border-gray-200 bg-white p-5">
             <p className="text-sm text-gray-500">Administrators</p>
-            <h2 className="mt-2 text-3xl font-bold text-gray-900">1</h2>
+            <h2 className="mt-2 text-3xl font-bold text-gray-900">{countAdmin}</h2>
             <p className="mt-1 text-xs text-blue-600">Privileged accounts</p>
           </div>
 
           <div className="rounded-xl border border-gray-200 bg-white p-5">
             <p className="text-sm text-gray-500">Regular Users</p>
-            <h2 className="mt-2 text-3xl font-bold text-gray-900">1</h2>
+            <h2 className="mt-2 text-3xl font-bold text-gray-900">{regularUsers}</h2>
             <p className="mt-1 text-xs text-purple-600">Standard accounts</p>
           </div>
         </div>
@@ -86,15 +128,20 @@ const AllUsers = () => {
 
             <div className="flex flex-col gap-3 sm:flex-row">
               <input
+                value={value}
+                onChange={(e) => setValue(e.target.value)}
                 type="text"
                 placeholder="Search users..."
                 className="rounded-lg border border-gray-300 px-4 py-2.5 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
               />
 
-              <select className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-600 outline-none focus:border-blue-500">
+              <select 
+              
+               onChange={(e) => setValue(e.target.value)}
+              className="rounded-lg border border-gray-300 bg-white px-3 py-2.5 text-gray-600 outline-none focus:border-blue-500">
                 <option>All Roles</option>
-                <option>Admin</option>
-                <option>User</option>
+                <option value="admin" >Admin</option>
+                <option value="user" >User</option>
               </select>
             </div>
           </div>
@@ -112,7 +159,7 @@ const AllUsers = () => {
               </thead>
 
               <tbody className="divide-y divide-gray-100">
-                {users.map((user) => (
+                {filterUsers.map((user) => (
                   <tr key={user.id} className="transition hover:bg-gray-50">
                     <td className="px-5 py-4">
                       <div className="flex items-center gap-3">

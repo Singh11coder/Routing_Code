@@ -10,7 +10,6 @@ import { AuthProvider } from './context/Authcontext.jsx';
 import ProtectedRoutes from './routes/ProtectedRoutes.jsx';
 import Home from './pages/Home.jsx';
 import Products  from './pages/Products.jsx';
-import Users from './pages/Users.jsx';
 import ProductLayout from './layout/ProductLayout.jsx';
 import { ProductProvider } from './context/ProductContext.jsx';
 import Search from './pages/Search.jsx';
@@ -19,6 +18,8 @@ import Order from './pages/Order.jsx';
 import AllUsers from './pages/UserPages/AllUsers.jsx';
 import CreateUser from './pages/UserPages/CreateUser.jsx';
 import RemoveUser from './pages/UserPages/RemoveUser.jsx';
+import UserLayout from './layout/UserLayout.jsx';
+import {UserProvider} from './context/UserContext.jsx';
 
 
 const router = createBrowserRouter([
@@ -73,10 +74,10 @@ const router = createBrowserRouter([
                 },
                 {
                    path:"users",
-                   element:<Users/>,
+                   element:<UserLayout/>,
                    children:[
                      {
-                        path:"all",
+                        path:"",
                         element:<AllUsers/>
                      },
                      {
@@ -96,9 +97,11 @@ const router = createBrowserRouter([
 ])
 
 createRoot(document.getElementById('root')).render(
- <ProductProvider>
-   <AuthProvider>
-     <RouterProvider router={router} />
-   </AuthProvider>
-  </ProductProvider> 
+    <UserProvider>
+      <ProductProvider>
+       <AuthProvider>
+        <RouterProvider router={router} />
+       </AuthProvider>
+      </ProductProvider> 
+    </UserProvider>
 )
